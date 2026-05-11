@@ -1,0 +1,10 @@
+{
+  "situazioneAttuale": "Current Situation:",
+  "fase": "Phase: {phase}",
+  "inTarget": "In Target",
+  "glicemiaBassa": "Low Glucose",
+  "profileName": "Name",
+  "profileDiabetesType": "Type",
+  "profilePhone": "Phone",
+  "profileEmail": "Email"
+}
