@@ -12,11 +12,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get situazioneAttuale => 'Glicemia:';
 
   @override
-  String fase(Object f) {
-    return 'FASE: $f';
-  }
-
-  @override
   String get inTarget => 'In Target';
 
   @override
@@ -33,6 +28,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get profileEmail => 'Email';
+
+  @override
+  String fase(String f) {
+    return 'FASE: $f';
+  }
 
   @override
   String get noMeasurementTitle => 'Nessun dato oggi';
@@ -126,4 +126,43 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get diabetesType_other => 'Altro';
+
+  @override
+  String get loginTitle => 'Accedi';
+
+  @override
+  String get loginButton => 'Entra';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get errorEmptyFields => 'Inserisci tutti i dati';
+
+  @override
+  String get errorLogin => 'Email o password errati';
+
+  @override
+  String get errorConnection => 'Errore di connessione';
+
+  @override
+  String get privacyAgreement => 'Accetto l\'informativa sulla privacy e il trattamento dei dati medici';
+
+  @override
+  String get privacyLink => 'Leggi l\'informativa';
+
+  @override
+  String get privacyError => 'Devi leggere e accettare la privacy per continuare';
+
+  @override
+  String get privacyPolicyTitle => 'Informativa sulla Privacy e Dati Medici';
+
+  @override
+  String get privacyPolicyContent => '1. TITOLARE DEL TRATTAMENTO\nL\'app Alyra è un progetto personale. I dati sono trattati per finalità di supporto alla gestione del diabete.\n\n2. DATI TRATTATI\nTrattiamo dati personali (email, nome) e dati sensibili (glicemia, carboidrati, dosaggi insulinici).\n\n3. CONSERVAZIONE\nI dati sono salvati sui server Render e nel database locale del telefono. Puoi cancellarli in ogni momento eliminando l\'account.\n\n4. RESPONSABILITÀ\nAlyra fornisce calcoli basati sui parametri da te inseriti. NON sostituisce il parere del medico. L\'uso dei suggerimenti è a tuo rischio.';
+
+  @override
+  String get privacyCloseButton => 'Ho letto e compreso';
 }

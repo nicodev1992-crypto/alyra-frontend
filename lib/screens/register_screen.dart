@@ -1,6 +1,5 @@
 import 'package:alyra_frontend/l10n/app_localizations.dart';
 import 'package:alyra_frontend/screens/dashboard_screen.dart';
-import 'package:alyra_frontend/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -62,6 +61,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _isStep1Valid = false;
   bool _isStep2Valid = true;
+  bool _privacyAccepted = false; // <--- AGGIUNGI QUESTA
+  bool _privacyViewed = false;
 
   @override
   void initState() {
@@ -140,21 +141,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final String url =
         "https://alyra-backend.onrender.com/insert/register_user";
 
+    final String timestampConsenso = DateTime.now().toIso8601String();
+
     final Map<String, dynamic> requestBody = {
       "full_name": _nameController.text.trim(),
       "email": _emailController.text.trim(),
       "password": _passwordController.text,
+
+      // --- DATI PRIVACY PER IL DATABASE ---
+      "privacy_accepted": _privacyAccepted,
+      "privacy_timestamp": timestampConsenso,
+
       "measurement_unit": _selectedUnit,
-      "diabetes_type": _selectedDiabete,
+      "diabetes_type": _selectedDiabete.name, // Usiamo .name per l'enum
       "target_min": int.tryParse(_minController.text) ?? 70,
       "target_max": int.tryParse(_maxController.text) ?? 180,
-      "target_ideal": int.tryParse(_targetIdealController.text) ?? 110, // NUOVO
-      "ic_ratio": double.tryParse(_icRatioController.text) ?? 10.0, // NUOVO
-      "isf": double.tryParse(_isfController.text) ?? 50.0, // NUOVO
-      "insulin_duration":
-          int.tryParse(_insulinDurationController.text) ?? 4, // NUOVO
-      "ketone_threshold":
-          int.tryParse(_ketoneThresholdController.text) ?? 250, // NUOVO
+      "target_ideal": int.tryParse(_targetIdealController.text) ?? 110,
+      "ic_ratio": double.tryParse(_icRatioController.text) ?? 10.0,
+      "isf": double.tryParse(_isfController.text) ?? 50.0,
+      "insulin_duration": int.tryParse(_insulinDurationController.text) ?? 4,
+      "ketone_threshold": int.tryParse(_ketoneThresholdController.text) ?? 250,
       "hypo_threshold": int.tryParse(_hypoController.text) ?? 70,
       "phone_number": _phoneController.text.trim(),
       "diabetes_note": _noteController.text.trim(),
@@ -263,7 +269,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            l10n.profileName, // "Nome"
+            l10n.profileName,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
@@ -277,158 +283,257 @@ class _RegisterScreenState extends State<RegisterScreen> {
             isNum: true,
           ),
 
+          const SizedBox(height: 10),
+
+          // --- BLOCCO PRIVACY OBBLIGATORIO ---
+          Row(
+            children: [
+              Checkbox(
+                // La checkbox è cliccabile solo se l'utente ha aperto il documento
+                onChanged: _privacyViewed
+                    ? (val) => setState(() => _privacyAccepted = val!)
+                    : null,
+                value: _privacyAccepted,
+              ),
+              Expanded(
+                child: Wrap(
+                  children: [
+                    Text(
+                      l10n.privacyAgreement,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    GestureDetector(
+                      onTap: _showPrivacyDialog,
+                      child: Text(
+                        " ${l10n.privacyLink}",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: _privacyViewed
+                              ? Colors.blue
+                              : Colors.redAccent,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 24),
+
           ElevatedButton(
-            onPressed: _isStep1Valid
+            // Il tasto si attiva solo se i campi sono validi E la privacy è accettata
+            onPressed: (_isStep1Valid && _privacyAccepted)
                 ? () => _pageController.nextPage(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.ease,
                   )
                 : null,
-            child: const Text(
-              "Continua",
-            ), // Aggiungi chiave "continue" se vuoi tradurre anche questo
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text("Continua", style: TextStyle(fontSize: 16)),
+          ),
+
+          // Messaggio di aiuto se la privacy non è spuntata
+          if (_isStep1Valid && !_privacyAccepted)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                l10n.privacyError,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStep2(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    bool isType1OrLADA =
+        _selectedDiabete == DiabetesType.type1 ||
+        _selectedDiabete == DiabetesType.lada;
+    String reqSuffix = isType1OrLADA ? '*' : l10n.optShort;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.step2Title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.blueGrey[800],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // 1. TIPO DIABETE (In alto come priorità)
+          _buildDropdown<DiabetesType>(
+            l10n.diabetesType,
+            _selectedDiabete,
+            DiabetesType.values,
+            (v) {
+              setState(() {
+                _selectedDiabete = v!;
+                _validateForm();
+              });
+            },
+            itemLabelBuilder: (type) => getDiabetesTypeName(type, l10n),
+          ),
+          const SizedBox(height: 16),
+
+          // 2. UNITÀ DI MISURA
+          _buildDropdown(
+            l10n.measurementUnit,
+            _selectedUnit,
+            ["mg/dL", "mmol/L"],
+            (v) => setState(() => _selectedUnit = v!),
+          ),
+
+          const SizedBox(height: 32), // Spazio generoso prima dei dati numerici
+          // SEZIONE TARGET
+          Row(
+            children: [
+              Expanded(
+                child: _buildField(_minController, l10n.targetMin, isNum: true),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildField(_maxController, l10n.targetMax, isNum: true),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // SEZIONE PARAMETRI MEDICI (Con intestazione visiva)
+          Row(
+            children: [
+              const Icon(
+                Icons.calculate_outlined,
+                color: Colors.blueAccent,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.calcParams,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ],
+          ),
+          const Divider(color: Colors.blueAccent),
+          const SizedBox(height: 16),
+
+          _buildField(
+            _targetIdealController,
+            "${l10n.targetIdeal} ${isType1OrLADA ? '*' : l10n.optional}",
+            isNum: true,
+          ),
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildField(
+                  _icRatioController,
+                  "${l10n.icRatio} $reqSuffix",
+                  isNum: true,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildField(
+                  _isfController,
+                  "${l10n.isf} $reqSuffix",
+                  isNum: true,
+                ),
+              ),
+            ],
+          ),
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildField(
+                  _insulinDurationController,
+                  "${l10n.insDuration} $reqSuffix",
+                  isNum: true,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildField(
+                  _ketoneThresholdController,
+                  "${l10n.ketoneThreshold} $reqSuffix",
+                  isNum: true,
+                ),
+              ),
+            ],
+          ),
+
+          _buildField(_hypoController, l10n.hypoThreshold, isNum: true),
+
+          const SizedBox(height: 32), // <--- Spazio richiesto prima delle note
+          // NOTE (Più alte per scrivere meglio)
+          _buildField(_noteController, l10n.diabetesNotes, lines: 3),
+
+          const SizedBox(height: 32),
+
+          // BOTTONE REGISTRAZIONE
+          SizedBox(
+            height: 52,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: _isStep2Valid ? _creaUtente : null,
+              child: Text(
+                l10n.completeReg,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+
+          if (!_isStep2Valid)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                l10n.validationError,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: () => _pageController.previousPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.ease,
+            ),
+            child: Text(l10n.back),
           ),
         ],
       ),
     );
   }
 
- Widget _buildStep2(BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
-
-  bool isType1OrLADA =
-      _selectedDiabete == DiabetesType.type1 || _selectedDiabete == DiabetesType.lada;
-  String reqSuffix = isType1OrLADA ? '*' : l10n.optShort;
-
-  return SingleChildScrollView(
-    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          l10n.step2Title,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.blueGrey[800],
-              ),
-        ),
-        const SizedBox(height: 24),
-
-        // 1. TIPO DIABETE (In alto come priorità)
-        _buildDropdown<DiabetesType>(
-          l10n.diabetesType,
-          _selectedDiabete,
-          DiabetesType.values,
-          (v) {
-            setState(() {
-              _selectedDiabete = v!;
-              _validateForm();
-            });
-          },
-          itemLabelBuilder: (type) => getDiabetesTypeName(type, l10n),
-        ),
-        const SizedBox(height: 16),
-
-        // 2. UNITÀ DI MISURA
-        _buildDropdown(
-          l10n.measurementUnit,
-          _selectedUnit,
-          ["mg/dL", "mmol/L"],
-          (v) => setState(() => _selectedUnit = v!),
-        ),
-        
-        const SizedBox(height: 32), // Spazio generoso prima dei dati numerici
-
-        // SEZIONE TARGET
-        Row(
-          children: [
-            Expanded(child: _buildField(_minController, l10n.targetMin, isNum: true)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildField(_maxController, l10n.targetMax, isNum: true)),
-          ],
-        ),
-        const SizedBox(height: 24),
-
-        // SEZIONE PARAMETRI MEDICI (Con intestazione visiva)
-        Row(
-          children: [
-            const Icon(Icons.calculate_outlined, color: Colors.blueAccent, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              l10n.calcParams,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
-            ),
-          ],
-        ),
-        const Divider(color: Colors.blueAccent),
-        const SizedBox(height: 16),
-
-        _buildField(
-          _targetIdealController,
-          "${l10n.targetIdeal} ${isType1OrLADA ? '*' : l10n.optional}",
-          isNum: true,
-        ),
-
-        Row(
-          children: [
-            Expanded(child: _buildField(_icRatioController, "${l10n.icRatio} $reqSuffix", isNum: true)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildField(_isfController, "${l10n.isf} $reqSuffix", isNum: true)),
-          ],
-        ),
-
-        Row(
-          children: [
-            Expanded(child: _buildField(_insulinDurationController, "${l10n.insDuration} $reqSuffix", isNum: true)),
-            const SizedBox(width: 12),
-            Expanded(child: _buildField(_ketoneThresholdController, "${l10n.ketoneThreshold} $reqSuffix", isNum: true)),
-          ],
-        ),
-
-        _buildField(_hypoController, l10n.hypoThreshold, isNum: true),
-
-        const SizedBox(height: 32), // <--- Spazio richiesto prima delle note
-
-        // NOTE (Più alte per scrivere meglio)
-        _buildField(_noteController, l10n.diabetesNotes, lines: 3),
-
-        const SizedBox(height: 32),
-
-        // BOTTONE REGISTRAZIONE
-        SizedBox(
-          height: 52,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: _isStep2Valid ? _creaUtente : null,
-            child: Text(l10n.completeReg, style: const TextStyle(fontSize: 16)),
-          ),
-        ),
-
-        if (!_isStep2Valid)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              l10n.validationError,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.red, fontSize: 13, fontWeight: FontWeight.bold),
-            ),
-          ),
-
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: () => _pageController.previousPage(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.ease,
-          ),
-          child: Text(l10n.back),
-        ),
-      ],
-    ),
-  );
-}
   Widget _buildField(
     TextEditingController controller,
     String label, {
@@ -471,6 +576,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       }).toList(),
       onChanged: onChanged,
+    );
+  }
+
+  void _showPrivacyDialog() {
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // L'utente deve interagire col tasto per chiudere
+      builder: (context) => AlertDialog(
+        title: Text(l10n.privacyPolicyTitle),
+        content: SingleChildScrollView(
+          child: Text(
+            l10n.privacyPolicyContent,
+            style: const TextStyle(fontSize: 14, height: 1.5),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _privacyViewed =
+                    true; // Sblocca la possibilità di mettere la spunta
+              });
+              Navigator.pop(context);
+            },
+            child: Text(l10n.privacyCloseButton),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -101,12 +101,6 @@ abstract class AppLocalizations {
   /// **'Current Situation:'**
   String get situazioneAttuale;
 
-  /// No description provided for @fase.
-  ///
-  /// In en, this message translates to:
-  /// **'PHASE: {f}'**
-  String fase(Object f);
-
   /// No description provided for @inTarget.
   ///
   /// In en, this message translates to:
@@ -142,6 +136,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email'**
   String get profileEmail;
+
+  /// No description provided for @fase.
+  ///
+  /// In en, this message translates to:
+  /// **'PHASE: {f}'**
+  String fase(String f);
 
   /// No description provided for @noMeasurementTitle.
   ///
@@ -328,6 +328,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get diabetesType_other;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginTitle;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get loginButton;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @errorEmptyFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all fields'**
+  String get errorEmptyFields;
+
+  /// No description provided for @errorLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get errorLogin;
+
+  /// No description provided for @errorConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error'**
+  String get errorConnection;
+
+  /// No description provided for @privacyAgreement.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the privacy policy and medical data processing'**
+  String get privacyAgreement;
+
+  /// No description provided for @privacyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Read policy'**
+  String get privacyLink;
+
+  /// No description provided for @privacyError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must read and accept the privacy policy to continue'**
+  String get privacyError;
+
+  /// No description provided for @privacyPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy and Medical Data'**
+  String get privacyPolicyTitle;
+
+  /// No description provided for @privacyPolicyContent.
+  ///
+  /// In en, this message translates to:
+  /// **'1. DATA CONTROLLER\nAlyra app is a personal project. Data is processed for diabetes management support purposes.\n\n2. DATA PROCESSED\nWe process personal data (email, name) and sensitive data (blood glucose, carbs, insulin dosages).\n\n3. STORAGE\nData is stored on Render servers and in the phone\'s local database. You can delete them at any time by deleting your account.\n\n4. LIABILITY\nAlyra provides calculations based on your input parameters. It DOES NOT replace medical advice. Use of suggestions is at your own risk.'**
+  String get privacyPolicyContent;
+
+  /// No description provided for @privacyCloseButton.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and understood'**
+  String get privacyCloseButton;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
