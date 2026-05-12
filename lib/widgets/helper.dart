@@ -1,19 +1,26 @@
+import 'package:alyra_frontend/l10n/app_localizations.dart';
 import 'package:flutter/material.dart'; // Fondamentale per usare 'Color' e 'Colors'
 
-enum StatusGlucoseType {
-  LOW("Glicemia Bassa"),
-  TARGET("In Target"),
-  HIGH("Glicemia Alta"),
-  CRITIC("Soglia Critica Superata");
-
-  // In Dart i campi negli enum devono essere final
-  final String descrizione;
-
-  // Costruttore costante
-  const StatusGlucoseType(this.descrizione);
-}
+enum StatusGlucoseType { LOW, TARGET, HIGH, CRITIC }
 
 class DashboardHelper {
+  static String getStatusText(BuildContext context, StatusGlucoseType status) {
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (status) {
+      case StatusGlucoseType.LOW:
+        return l10n.glucoseLow;
+      case StatusGlucoseType.TARGET:
+        return l10n.glucoseInTarget;
+      case StatusGlucoseType.HIGH:
+        return l10n.glucoseHigh;
+      case StatusGlucoseType.CRITIC:
+        return l10n.glucoseCritic;
+      default:
+        return "";
+    }
+  }
+
   // Aggiungi 'String status' come parametro
   static Color getStatusColor(StatusGlucoseType status) {
     switch (status) {
@@ -34,7 +41,7 @@ class DashboardHelper {
     return Icons.warning_amber_rounded;
   }
 
-    // Helper per i tag (Età e Tipo Diabete)
+  // Helper per i tag (Età e Tipo Diabete)
   static Widget buildSmallTag(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -53,23 +60,27 @@ class DashboardHelper {
     );
   }
 
-
-
-static StatusGlucoseType setStatus(double lastGlucoseValue, int targetMin, int targetMax, int hypoThreshold) {
+  static StatusGlucoseType setStatus(
+    double lastGlucoseValue,
+    int targetMin,
+    int targetMax,
+    int hypoThreshold,
+  ) {
     StatusGlucoseType status;
 
     if (lastGlucoseValue < targetMin) {
-        status = StatusGlucoseType.LOW;
+      status = StatusGlucoseType.LOW;
     } else if (lastGlucoseValue < hypoThreshold) {
-        status = StatusGlucoseType.CRITIC;
+      status = StatusGlucoseType.CRITIC;
     } else if (lastGlucoseValue > targetMax) {
-        status = StatusGlucoseType.HIGH;
+      status = StatusGlucoseType.HIGH;
     } else {
-        status = StatusGlucoseType.TARGET;
+      status = StatusGlucoseType.TARGET;
     }
 
     return status;
-}
+  }
+
   // Metodo helper privato (sempre dentro DashboardWidgets)
   static Widget buildSmallInfoBadge(IconData icon, String label) {
     return Container(
@@ -90,6 +101,4 @@ static StatusGlucoseType setStatus(double lastGlucoseValue, int targetMin, int t
       ),
     );
   }
-  
 }
-

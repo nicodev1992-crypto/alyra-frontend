@@ -104,8 +104,8 @@ abstract class AppLocalizations {
   /// No description provided for @fase.
   ///
   /// In en, this message translates to:
-  /// **'Phase: {phase}'**
-  String fase(Object phase);
+  /// **'PHASE: {f}'**
+  String fase(Object f);
 
   /// No description provided for @inTarget.
   ///
@@ -142,6 +142,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email'**
   String get profileEmail;
+
+  /// No description provided for @noMeasurementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No data today'**
+  String get noMeasurementTitle;
+
+  /// No description provided for @noMeasurementSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your first glucose level'**
+  String get noMeasurementSubtitle;
+
+  /// No description provided for @targetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get targetLabel;
+
+  /// No description provided for @lastMeasurementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Last measurement'**
+  String get lastMeasurementTitle;
+
+  /// No description provided for @glucoseLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get glucoseLow;
+
+  /// No description provided for @glucoseInTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'In Target'**
+  String get glucoseInTarget;
+
+  /// No description provided for @glucoseHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get glucoseHigh;
+
+  /// No description provided for @glucoseCritic.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get glucoseCritic;
+
+  /// No description provided for @step2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2: Medical Data'**
+  String get step2Title;
+
+  /// No description provided for @targetMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Min Target *'**
+  String get targetMin;
+
+  /// No description provided for @targetMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Target *'**
+  String get targetMax;
+
+  /// No description provided for @calcParams.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation Parameters'**
+  String get calcParams;
+
+  /// No description provided for @targetIdeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideal Target (mg/dL)'**
+  String get targetIdeal;
+
+  /// No description provided for @icRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'I/C Ratio'**
+  String get icRatio;
+
+  /// No description provided for @isf.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitivity (ISF)'**
+  String get isf;
+
+  /// No description provided for @insDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Insulin Duration'**
+  String get insDuration;
+
+  /// No description provided for @ketoneThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Ketone Threshold'**
+  String get ketoneThreshold;
+
+  /// No description provided for @hypoThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Hypoglycemia Threshold'**
+  String get hypoThreshold;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'(optional)'**
+  String get optional;
+
+  /// No description provided for @optShort.
+  ///
+  /// In en, this message translates to:
+  /// **'(opt.)'**
+  String get optShort;
+
+  /// No description provided for @measurementUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit of Measurement *'**
+  String get measurementUnit;
+
+  /// No description provided for @diabetesType.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetes Type *'**
+  String get diabetesType;
+
+  /// No description provided for @diabetesNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetes Notes (optional)'**
+  String get diabetesNotes;
+
+  /// No description provided for @completeReg.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Registration'**
+  String get completeReg;
+
+  /// No description provided for @validationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in the required fields for the selected diabetes type'**
+  String get validationError;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @diabetesType_type1.
+  ///
+  /// In en, this message translates to:
+  /// **'Type 1'**
+  String get diabetesType_type1;
+
+  /// No description provided for @diabetesType_type2.
+  ///
+  /// In en, this message translates to:
+  /// **'Type 2'**
+  String get diabetesType_type2;
+
+  /// No description provided for @diabetesType_gestational.
+  ///
+  /// In en, this message translates to:
+  /// **'Gestational'**
+  String get diabetesType_gestational;
+
+  /// No description provided for @diabetesType_lada.
+  ///
+  /// In en, this message translates to:
+  /// **'LADA'**
+  String get diabetesType_lada;
+
+  /// No description provided for @diabetesType_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get diabetesType_other;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

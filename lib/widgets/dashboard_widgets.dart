@@ -6,97 +6,135 @@ import 'helper.dart'; // Importa l'helper per i colori
 class DashboardWidgets {
   // dashboard_widgets.dart
 
-static Widget buildProfileCard({
-  required BuildContext context, // Aggiunto context per le traduzioni
-  required StatusGlucoseType status,
-  required String fullName,
-  required String diabete,
-  required String phoneNumber,
-  required String email,
-}) {
-  final Color mainStatusColor = DashboardHelper.getStatusColor(status);
-  final l10n = AppLocalizations.of(context)!; // Shortcut per le traduzioni
+  static Widget buildProfileCard({
+    required BuildContext context, // Aggiunto context per le traduzioni
+    required StatusGlucoseType status,
+    required String fullName,
+    required String diabete,
+    required String phoneNumber,
+    required String email,
+  }) {
+    final Color mainStatusColor = DashboardHelper.getStatusColor(status);
+    final l10n = AppLocalizations.of(context)!; // Shortcut per le traduzioni
 
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(25),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.04),
-          blurRadius: 15,
-          offset: const Offset(0, 6),
-        ),
-      ],
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // FOTO PROFILO A SINISTRA
-        Container(
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: mainStatusColor.withOpacity(0.3), 
-              width: 2
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // FOTO PROFILO A SINISTRA
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: mainStatusColor.withOpacity(0.3),
+                width: 2,
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 45,
+              backgroundColor: mainStatusColor.withOpacity(0.1),
+              child: Icon(
+                Icons.person_rounded,
+                size: 50,
+                color: mainStatusColor,
+              ),
             ),
           ),
-          child: CircleAvatar(
-            radius: 45,
-            backgroundColor: mainStatusColor.withOpacity(0.1),
-            child: Icon(Icons.person_rounded, size: 50, color: mainStatusColor),
+
+          const SizedBox(width: 20),
+
+          // DATI A DESTRA CON TRADUZIONI
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildCompactInfoRow(
+                  Icons.person_outline,
+                  "${l10n.profileName}:",
+                  fullName,
+                  mainStatusColor,
+                ),
+                const SizedBox(height: 8),
+                _buildCompactInfoRow(
+                  Icons.bloodtype_outlined,
+                  "${l10n.profileDiabetesType}:",
+                  diabete,
+                  Colors.redAccent,
+                ),
+                const SizedBox(height: 8),
+                _buildCompactInfoRow(
+                  Icons.phone_android_outlined,
+                  "${l10n.profilePhone}:",
+                  phoneNumber,
+                  Colors.orange.shade700,
+                ),
+                const SizedBox(height: 8),
+                _buildCompactInfoRow(
+                  Icons.alternate_email_outlined,
+                  "${l10n.profileEmail}:",
+                  email,
+                  Colors.purple.shade700,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper per le righe (rimane uguale ma compatto)
+  static Widget _buildCompactInfoRow(
+    IconData icon,
+    String label,
+    String value,
+    Color iconColor,
+  ) {
+    return Row(
+      children: [
+        Icon(icon, color: iconColor, size: 16),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
           ),
         ),
-
-        const SizedBox(width: 20),
-
-        // DATI A DESTRA CON TRADUZIONI
+        const SizedBox(width: 4),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildCompactInfoRow(Icons.person_outline, "${l10n.profileName}:", fullName, mainStatusColor),
-              const SizedBox(height: 8),
-              _buildCompactInfoRow(Icons.bloodtype_outlined, "${l10n.profileDiabetesType}:", diabete, Colors.redAccent),
-              const SizedBox(height: 8),
-              _buildCompactInfoRow(Icons.phone_android_outlined, "${l10n.profilePhone}:", phoneNumber, Colors.orange.shade700),
-              const SizedBox(height: 8),
-              _buildCompactInfoRow(Icons.alternate_email_outlined, "${l10n.profileEmail}:", email, Colors.purple.shade700),
-            ],
+          child: Text(
+            value.isNotEmpty ? value : "-",
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
-    ),
-  );
-}
-
-// Helper per le righe (rimane uguale ma compatto)
-static Widget _buildCompactInfoRow(IconData icon, String label, String value, Color iconColor) {
-  return Row(
-    children: [
-      Icon(icon, color: iconColor, size: 16),
-      const SizedBox(width: 8),
-      Text(
-        label,
-        style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(width: 4),
-      Expanded(
-        child: Text(
-          value.isNotEmpty ? value : "-",
-          style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ],
-  );
-}
+    );
+  }
 
   static Widget buildGlucoseCard({
+    required BuildContext context,
     required StatusGlucoseType status,
     required String selectedPhase,
     required double lastGlucose,
@@ -107,159 +145,237 @@ static Widget _buildCompactInfoRow(IconData icon, String label, String value, Co
     required String? lastGlucoseMeasureTime,
     required bool userInsertAtLastOneMeasurement,
   }) {
-    final Color mainColor = DashboardHelper.getStatusColor(status);
+    final l10n = AppLocalizations.of(context)!;
 
-    // Controlliamo se la fase è valida
+    // LOGICA DI ALLERTA CRITICA
+    final bool isHypo = lastGlucose <= hypoThreshold;
+    final Color mainColor = isHypo
+        ? Colors.red.shade800
+        : DashboardHelper.getStatusColor(status);
     bool hasPhase = selectedPhase != 'Null' && selectedPhase.isNotEmpty;
 
-    if (userInsertAtLastOneMeasurement) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: mainColor,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: mainColor.withOpacity(0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (hasPhase) ...[
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  "Phase: ${selectedPhase.toUpperCase()}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
+    if (!userInsertAtLastOneMeasurement) {
+      return _buildEmptyGlucoseCard(
+        l10n,
+        DashboardHelper.getStatusColor(status),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: mainColor,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: mainColor.withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // RIGA SUPERIORE
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (hasPhase)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    l10n.fase(selectedPhase.toUpperCase()),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
+              if (lastGlucoseMeasureTime != null)
+                Text(
+                  lastGlucoseMeasureTime,
+                  style: const TextStyle(color: Colors.white70, fontSize: 11),
+                ),
             ],
-            if (lastGlucoseMeasureTime != null) ...[
+          ),
+
+          const SizedBox(height: 10),
+
+          // TITOLO O MESSAGGIO DI EMERGENZA
+          Text(
+            isHypo
+                ? "ATTENZIONE: IPOGLICEMIA!"
+                : l10n.lastMeasurementTitle.toUpperCase(),
+            style: TextStyle(
+              color: isHypo ? Colors.white : Colors.white.withOpacity(0.7),
+              fontSize: 12,
+              fontWeight: FontWeight.w900, // Più marcato se in hypo
+              letterSpacing: 1.2,
+            ),
+          ),
+
+          // VALORE CENTRALE CON ICONA DI ALLARME SE IN HYPO
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (isHypo)
+                const Icon(
+                  Icons.warning_rounded,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              if (isHypo) const SizedBox(width: 10),
               Text(
-                "Time: $lastGlucoseMeasureTime",
+                "$lastGlucose",
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 52,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(width: 8),
+              Text(
+                measurementUnit,
+                style: const TextStyle(color: Colors.white70, fontSize: 16),
+              ),
             ],
+          ),
 
-            const Text(
-              "ULTIMA MISURAZIONE",
-              style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-                fontSize: 12,
-              ),
+          const SizedBox(height: 15),
+
+          // BARRA INFO
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isHypo
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(18),
             ),
-
-            Text(
-              "$lastGlucose",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 64,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              measurementUnit,
-              style: const TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DashboardHelper.buildSmallInfoBadge(
-                  Icons.track_changes,
-                  "$targetMin - $targetMax",
-                ),
-                const SizedBox(width: 10),
-                DashboardHelper.buildSmallInfoBadge(
-                  Icons.notifications_active,
-                  "Hypo: $hypoThreshold",
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 25),
-
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-              ),
+            child: IntrinsicHeight(
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    DashboardHelper.getStatusIcon(status),
-                    color: mainColor,
-                    size: 24,
+                  // STATO (Es: Glicemia Bassa)
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          isHypo
+                              ? Icons.emergency_share
+                              : DashboardHelper.getStatusIcon(status),
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          // <--- Aggiungi questo
+                          child: Text(
+                            DashboardHelper.getStatusText(context, status),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow
+                                .ellipsis, // Aggiunge i puntini di sospensione se il testo è troppo lungo
+                            maxLines: 1, // Mantiene il testo su una riga sola
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 10),
-                  Text(
-                    status.descrizione,
-                    style: TextStyle(
-                      color: mainColor,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
+                  const VerticalDivider(color: Colors.white24, thickness: 1),
+                  // TARGET
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const Text(
+                          "TARGET",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "$targetMin-$targetMax",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(color: Colors.white24, thickness: 1),
+                  // HYPO (ROSSO SE ATTIVO)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const Text(
+                          "HYPO",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "<$hypoThreshold",
+                          style: TextStyle(
+                            color: isHypo ? Colors.yellowAccent : Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+  }
 
-    // Caso: Nessuna misurazione inserita
+  // Widget per il caso "Nessuna misurazione" (Modernizzato)
+  static Widget _buildEmptyGlucoseCard(AppLocalizations l10n, Color mainColor) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: mainColor.withOpacity(0.2), width: 2),
+        border: Border.all(color: mainColor.withOpacity(0.1), width: 2),
       ),
       child: Column(
         children: [
-          Icon(Icons.opacity, color: mainColor.withOpacity(0.5), size: 48),
-          const SizedBox(height: 16),
-          const Text(
-            "Pronto per la prima misurazione?",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Icon(
+            Icons.bubble_chart_outlined,
+            color: mainColor.withOpacity(0.4),
+            size: 40,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
-            "Inserisci il tuo livello di glicemia.",
-            style: TextStyle(color: Colors.grey[600]),
+            l10n.noMeasurementTitle,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            l10n.noMeasurementSubtitle,
+            style: TextStyle(color: Colors.grey[500], fontSize: 13),
           ),
         ],
       ),

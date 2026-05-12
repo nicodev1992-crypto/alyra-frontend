@@ -18,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   //USER INFO
   String _fullName = "User";
-  String _email ="noemail";
+  String _email = "noemail";
   String _cellNumber = '234';
   String _password = '0000';
   int _targetMin = 70;
@@ -39,7 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   //MEALS INFO
   String? _lastMealName;
-  int? _lastMealCarbs;
+  double? _lastMealCarbs;
   int? _selectedFoodId;
   double _selectedFoodCarbsPer100g = 0;
   double _currentGrams = 0;
@@ -93,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (data != null) {
       setState(() {
         _lastMealName = data['description'] ?? "Nessuna descrizione";
-        _lastMealCarbs = data['carbs_grams'] ?? 0;
+        _lastMealCarbs = (data['carbs_grams'] as num?)?.toDouble() ?? 0.0;
 
         _userInsertAtLastOneMeal = true;
 
@@ -114,6 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         setState(() {
           // 1. Usa il nome esatto che manda Python (probabilmente glucose_value)
           // 2. Forza la conversione in double per evitare crash di tipo
+          // Sostituisci la tua riga 59 con questa versione "blindata"
           _lastGlucose = (data['sugar_value'] as num?)?.toDouble() ?? 0.0;
 
           _selectedPhase = data['phase'] ?? "Non scaricata";
@@ -175,7 +176,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       _userInsertAtLastOneMeal = true;
       _lastMealName = mealName;
-      _lastMealCarbs = totalCarbs.toInt();
+      _lastMealCarbs = totalCarbs;
 
       DateTime date = DateTime.now();
       _lastMealTime = "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
@@ -300,7 +301,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               fullName: _fullName,
               diabete: _diabete ?? "Tipo non specificato",
               phoneNumber: _cellNumber,
-              email: _email
+              email: _email,
             ),
 
             const SizedBox(height: 20),
@@ -313,6 +314,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             // CARD GLICEMIA PRINCIPALE
             DashboardWidgets.buildGlucoseCard(
+              context: context,
               status: _status,
               selectedPhase: _selectedPhase,
               lastGlucose: _lastGlucose,
@@ -501,12 +503,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onPressed: isReady
                       ? () {
                           double c100 =
-                              double.tryParse(carbsPer100Controller.text) ?? 0;
+                              double.tryParse(
+                                carbsPer100Controller.text.replaceAll(',', '.'),
+                              ) ??
+                              0;
                           double weight =
-                              double.tryParse(weightController.text) ?? 0;
+                              double.tryParse(
+                                weightController.text.replaceAll(',', '.'),
+                              ) ??
+                              0;
                           double totalCarbs = (c100 * weight) / 100;
-
-                          _insertMealInLocal(mealController.text, totalCarbs);
+                          double roundedCarbs = double.parse(totalCarbs.toStringAsFixed(2));
+                          _insertMealInLocal(mealController.text, roundedCarbs);
 
                           Navigator.pop(context);
                         }

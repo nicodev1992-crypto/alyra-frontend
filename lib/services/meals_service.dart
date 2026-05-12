@@ -6,7 +6,7 @@ class MealsService {
   static Future<bool> sendMealToPython(
     int userId,
     String name,
-    int carbs,
+    double carbs,
   ) async {
     final url = Uri.parse(
       "https://alyra-backend.onrender.com/insert/last_meal",

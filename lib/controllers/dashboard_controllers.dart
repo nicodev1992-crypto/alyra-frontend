@@ -49,7 +49,7 @@ class DashboardControllers {
     bool success = await MealsService.sendMealToPython(
       userId,
       mealName,
-      totalCarbs.toInt(),
+      totalCarbs,
     );
 
     if (!context.mounted) {
