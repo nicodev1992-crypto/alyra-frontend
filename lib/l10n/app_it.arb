@@ -55,5 +55,9 @@
   "privacyError": "Devi leggere e accettare la privacy per continuare",
   "privacyPolicyTitle": "Informativa sulla Privacy e Dati Medici",
   "privacyPolicyContent": "1. TITOLARE DEL TRATTAMENTO\nL'app Alyra è un progetto personale. I dati sono trattati per finalità di supporto alla gestione del diabete.\n\n2. DATI TRATTATI\nTrattiamo dati personali (email, nome) e dati sensibili (glicemia, carboidrati, dosaggi insulinici).\n\n3. CONSERVAZIONE\nI dati sono salvati sui server Render e nel database locale del telefono. Puoi cancellarli in ogni momento eliminando l'account.\n\n4. RESPONSABILITÀ\nAlyra fornisce calcoli basati sui parametri da te inseriti. NON sostituisce il parere del medico. L'uso dei suggerimenti è a tuo rischio.",
-  "privacyCloseButton": "Ho letto e compreso"
+  "privacyCloseButton": "Ho letto e compreso",
+  "welcomeTitle": "Alyra",
+  "welcomeSubtitle": "Il tuo assistente intelligente per il diabete",
+  "welcomeStartButton": "INIZIA ORA",
+  "welcomeLoginButton": "HO GIÀ UN ACCOUNT"
 }

@@ -165,4 +165,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyCloseButton => 'I have read and understood';
+
+  @override
+  String get welcomeTitle => 'Alyra';
+
+  @override
+  String get welcomeSubtitle => 'Your Smart Diabetes Assistant';
+
+  @override
+  String get welcomeStartButton => 'GET STARTED';
+
+  @override
+  String get welcomeLoginButton => 'I ALREADY HAVE AN ACCOUNT';
 }

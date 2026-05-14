@@ -1,3 +1,4 @@
+import 'package:alyra_frontend/services/entries.dart';
 import 'package:alyra_frontend/services/glucose_service.dart';
 import 'package:alyra_frontend/services/meals_service.dart';
 import 'package:alyra_frontend/services/user_service.dart';
@@ -32,6 +33,38 @@ class DashboardControllers {
     } catch (e) {
       print("ERRORE CRITICO in getUser: $e"); // DEBUG
       return null;
+    }
+  }
+
+  Future<void> getGlucoseAdvice({
+    required BuildContext context,
+    required GlucoseEntry glucoseDataEntry,
+    required Function(String advice) onSuccess, // <--- Riceve la stringa
+  }) async {
+    // Chiamiamo il servizio che ora restituisce il testo del consiglio
+    String? adviceFromServer = await GlucoseService.postGlucoseAndGetAdvice(
+      glucoseDataEntry,
+    );
+
+    if (!context.mounted) return;
+
+    if (adviceFromServer != null) {
+      // Passiamo il consiglio ricevuto alla funzione onSuccess
+      onSuccess(adviceFromServer);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Consiglio ricevuto con successo!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Errore: Impossibile ottenere il consiglio."),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -105,31 +138,6 @@ class DashboardControllers {
     }
   }
 
-  Future<void> trySendGlucoseToBackend({
-    required BuildContext context,
-    required double glucoseValue,
-    required String phase,
-    required String sourceType, // <--- Aggiunto qui
-    required VoidCallback onSuccess,
-  }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final int userId = prefs.getInt('userId') ?? 0;
-
-    bool success = await GlucoseService.saveGlucose(
-      userId: userId,
-      glucoseValue: glucoseValue,
-      phase: phase,
-      sourceType: sourceType, // <--- Passato al servizio
-    );
-
-    if (success && context.mounted) {
-      onSuccess();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Glicemia salvata!")));
-    }
-  }
-
   Future<Map<String, dynamic>?> getLatestGlucose({
     required BuildContext context,
   }) async {
@@ -148,5 +156,9 @@ class DashboardControllers {
       print("Errore durante getMeal: $e");
       return null;
     }
+  }
+
+  Future<int> getUserID() async {
+    return await UserService.getUserIDFromLocalDevice();
   }
 }

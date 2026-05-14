@@ -1,7 +1,9 @@
 import 'package:alyra_frontend/l10n/app_localizations.dart';
+import 'package:alyra_frontend/services/entries.dart';
 import 'package:alyra_frontend/services/meals_service.dart';
 import 'package:flutter/material.dart';
-import 'helper.dart'; // Importa l'helper per i colori
+import 'dashboard_helper.dart'; // Importa l'helper per i colori
+
 
 class DashboardWidgets {
   // dashboard_widgets.dart
@@ -476,4 +478,5 @@ class DashboardWidgets {
       },
     );
   }
+
 }

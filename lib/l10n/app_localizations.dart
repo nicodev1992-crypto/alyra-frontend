@@ -406,6 +406,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I have read and understood'**
   String get privacyCloseButton;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alyra'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Smart Diabetes Assistant'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @welcomeStartButton.
+  ///
+  /// In en, this message translates to:
+  /// **'GET STARTED'**
+  String get welcomeStartButton;
+
+  /// No description provided for @welcomeLoginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'I ALREADY HAVE AN ACCOUNT'**
+  String get welcomeLoginButton;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -55,5 +55,9 @@
   "privacyError": "You must read and accept the privacy policy to continue",
   "privacyPolicyTitle": "Privacy Policy and Medical Data",
   "privacyPolicyContent": "1. DATA CONTROLLER\nAlyra app is a personal project. Data is processed for diabetes management support purposes.\n\n2. DATA PROCESSED\nWe process personal data (email, name) and sensitive data (blood glucose, carbs, insulin dosages).\n\n3. STORAGE\nData is stored on Render servers and in the phone's local database. You can delete them at any time by deleting your account.\n\n4. LIABILITY\nAlyra provides calculations based on your input parameters. It DOES NOT replace medical advice. Use of suggestions is at your own risk.",
-  "privacyCloseButton": "I have read and understood"
+  "privacyCloseButton": "I have read and understood",
+  "welcomeTitle": "Alyra",
+  "welcomeSubtitle": "Your Smart Diabetes Assistant",
+  "welcomeStartButton": "GET STARTED",
+  "welcomeLoginButton": "I ALREADY HAVE AN ACCOUNT"
 }

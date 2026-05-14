@@ -1,13 +1,12 @@
-import 'package:alyra_frontend/screens/login_screen.dart';
-import 'package:alyra_frontend/screens/register_screen.dart';
-import 'package:alyra_frontend/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// 1. IMPORTA QUESTE RIGHE (il percorso esatto dipende dal tuo progetto)
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'l10n/app_localizations.dart';
 
+// Import dei tuoi file
+import 'l10n/app_localizations.dart';
+import 'services/user_service.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/welcome_screen.dart'; // <--- Nuovo Import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,11 +22,7 @@ void main() async {
     }
   }
 
-  runApp(
-    AlyraApp(
-      isLogged: userId != null && userIsValid,
-    ),
-  );
+  runApp(AlyraApp(isLogged: userId != null && userIsValid));
 }
 
 class AlyraApp extends StatelessWidget {
@@ -39,23 +34,17 @@ class AlyraApp extends StatelessWidget {
     return MaterialApp(
       title: 'Alyra',
       debugShowCheckedModeBanner: false,
-      
-      // 2. AGGIUNGI IL SUPPORTO ALLE LOCALIZZAZIONI
+
       localizationsDelegates: const [
-        AppLocalizations.delegate, // Il delegato generato dai tuoi file .arb
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('it'), // Italiano
-        Locale('en'), // Inglese
-      ],
-      
-      // Se vuoi forzare una lingua specifica per test:
-      // locale: const Locale('it'), 
+      supportedLocales: const [Locale('it'), Locale('en')],
 
-      home: isLogged ? const DashboardScreen() : const RegisterScreen(),
+      // Logica: Se loggato Dashboard, altrimenti Schermata di Benvenuto
+      home: isLogged ? const DashboardScreen() : const WelcomeScreen(),
     );
   }
 }

@@ -139,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _creaUtente() async {
     final String url =
-        "https://alyra-backend.onrender.com/insert/register_user";
+        "https://alyra-backend.onrender.com/post/register_user";
 
     final String timestampConsenso = DateTime.now().toIso8601String();
 
@@ -289,34 +289,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Row(
             children: [
               Checkbox(
-                // La checkbox è cliccabile solo se l'utente ha aperto il documento
-                onChanged: _privacyViewed
-                    ? (val) => setState(() => _privacyAccepted = val!)
-                    : null,
                 value: _privacyAccepted,
+                // Se l'utente ha già letto una volta, può togliere/mettere la spunta liberamente
+                onChanged: _privacyViewed
+                    ? (val) {
+                        setState(() => _privacyAccepted = val!);
+                        _validateForm();
+                      }
+                    : null, // Disabilitato finché non premono il link blu
               ),
               Expanded(
-                child: Wrap(
-                  children: [
-                    Text(
-                      l10n.privacyAgreement,
+                child: GestureDetector(
+                  onTap: _showPrivacyDialog,
+                  child: Text.rich(
+                    TextSpan(
+                      text: "${l10n.privacyAgreement} ",
                       style: const TextStyle(fontSize: 13),
-                    ),
-                    GestureDetector(
-                      onTap: _showPrivacyDialog,
-                      child: Text(
-                        " ${l10n.privacyLink}",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: _privacyViewed
-                              ? Colors.blue
-                              : Colors.redAccent,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                      children: [
+                        TextSpan(
+                          text: l10n.privacyLink,
+                          style: TextStyle(
+                            color: _privacyViewed
+                                ? Colors.blue
+                                : Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -584,8 +586,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     showDialog(
       context: context,
-      barrierDismissible:
-          false, // L'utente deve interagire col tasto per chiudere
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: Text(l10n.privacyPolicyTitle),
         content: SingleChildScrollView(
@@ -595,15 +596,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         actions: [
+          // Tasto per chiudere senza accettare
           TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.back), // O "Annulla"
+          ),
+          // Tasto di accettazione che fa tutto in un colpo solo
+          ElevatedButton(
             onPressed: () {
               setState(() {
-                _privacyViewed =
-                    true; // Sblocca la possibilità di mettere la spunta
+                _privacyViewed = true; // Segna come letto
+                _privacyAccepted = true; // ATTIVA LA SPUNTA AUTOMATICAMENTE
               });
+              _validateForm(); // Forza il ricalcolo per abilitare il tasto "Continua"
               Navigator.pop(context);
             },
-            child: Text(l10n.privacyCloseButton),
+            child: const Text(
+              "Ho letto e accetto",
+            ), // Puoi aggiungere questa stringa negli .arb
           ),
         ],
       ),
