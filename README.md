@@ -14,4 +14,8 @@ Cross-platform Flutter application for **Alyra**, a mobile client for tracking m
 * **Backend Sync:** Connects directly to the Python backend to fetch and store health metrics.
 * **Input Validation:** Client-side form checks for meal details and glucose values before sending requests.
 
-https://github.com/nicodev1992-crypto/alyra-frontend.git
+## 💻 Quickstart
+
+1. **Clone repository:**
+   ```bash
+    https://github.com/nicodev1992-crypto/alyra-frontend.git
