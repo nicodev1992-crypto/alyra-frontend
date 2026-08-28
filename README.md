@@ -1,18 +1,16 @@
-# alyra_frontend
+# Alyra Frontend 📱
 
-A new Flutter project.
+Cross-platform Flutter application for **Alyra**, a mobile client for tracking meals and blood glucose levels.
 
-## Getting Started
+## 🛠️ Tech Stack
 
-This project is a starting point for a Flutter application.
+* **Framework:** Flutter
+* **Language:** Dart
+* **API Integration:** HTTP / Dio *(lascia quello usato)*
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Features
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+* **Glucose & Meal UI:** User-friendly interface to log daily blood glucose readings and meals.
+* **Backend Sync:** Connects directly to the Python backend to fetch and store health metrics.
+* **Input Validation:** Client-side form checks for meal details and glucose values before sending requests.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Alyra-Frontend
